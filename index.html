@@ -208,13 +208,13 @@ html,body{ background-color: #fff; overflow:hidden; }
             }
 
             function updateTransform(x, y, scale, angle,e) {
-				$(e).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
-                    "scale3d(" + scale + "," + scale + ",1)")
-					$(e).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
-                    "scale3d(" + scale + "," + scale + ",1)")
-                // div.style.webkitTransform = div.style.transform =
-                //     "translate3d(" + x + "px," + y + "px,0px) " +
-                //     "scale3d(" + scale + "," + scale + ",1)";
+// 				$(e).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
+//                     "scale3d(" + scale + "," + scale + ",1)")
+// 					$(e).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
+//                     "scale3d(" + scale + "," + scale + ",1)")
+               e.style.webkitTransform = e.style.transform =
+                    "translate3d(" + x + "px," + y + "px,0px) " +
+                    "scale3d(" + scale + "," + scale + ",1)";
             }
         },
 
