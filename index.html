@@ -168,6 +168,10 @@ html,body{ background-color: #fff; overflow:hidden; }
                 var offy = dy + ev.y;
                 updateTransform(offx, offy, scale, angle);
 			});
+			$("#decals"+i).on('click',function(){
+				console.log(i)
+				div = $("#decals"+i)
+			})
 			//拖拽移动每张图片
             touch.on('#decals' + i, 'dragend', function (ev) {
 				console.log('decals', i)
@@ -178,8 +182,7 @@ html,body{ background-color: #fff; overflow:hidden; }
 			});
 			//图片旋转
             touch.on('#picEditMain', 'rotate', function (e) {
-		    alert(i)
-                if(currIndex!=i)return;
+		if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
 		    
                $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
@@ -202,8 +205,7 @@ html,body{ background-color: #fff; overflow:hidden; }
             }
 
             function updateTransform(x, y, scale, angle) {
-		    alert(i,'p')
-		    $("#decals"+i).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
+		$("#decals"+i).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
                     "scale3d(" + scale + "," + scale + ",1)")
 					$("#decals"+i).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
                     "scale3d(" + scale + "," + scale + ",1)")
