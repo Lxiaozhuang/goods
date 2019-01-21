@@ -185,10 +185,10 @@ html,body{ background-color: #fff; overflow:hidden; }
 		if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
 		    
-//                $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
-// 				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
-                e.target.style.webkitTransform = e.target.style.transform =
-                    "rotate(" + tempAngle + "deg) "
+               $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
+				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
+//                 e.target.style.webkitTransform = e.target.style.transform =
+//                     "rotate(" + tempAngle + "deg) "
             })
             touch.on('#picEditMain', 'pinch', function (e) {
                 if(currIndex!=i)return;
