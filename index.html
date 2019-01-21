@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv = "X-UA-Compatible" content ="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit"/>
+<title>图片合成</title>
+<meta content="" name="Keywords">
+<meta content="" name="Description">
+<style type="text/css">
+*{ margin: 0; padding: 0; font: 400 14px/1 "Microsoft YaHei", tahoma, arial, SimSun; }
+a{ text-decoration: none; }	
+img{ border:none;  vertical-align: middle;}
+input, textarea {-webkit-transform: translate3d(0, 0, 0);transform: translate3d(0, 0, 0);}
+html,body{ background-color: #fff; overflow:hidden; }
+
+/*弹窗*/
+.ui-pop-layout{ display:none; position:fixed; left:0; top:0; bottom:0; z-index:888; width:100%; }
+.ui-pop-layout[data-show=true],.ui-pop-layout[data-show="true"]{ display:block;}
+.ui-pop-layout .ui-pop-center{  position:absolute; left:50%; top:50%; z-index:3;-webkit-transform: translate3d(-50%,-50%, 0);transform: translate3d(-50%,-50%, 0);}
+.ui-pop-layout .ui-pop-close{ position: absolute;right:0.5rem; top:0.5rem; z-index:8; width:1.5rem; height:1.5rem;}
+.ui-pop-layout .ui-pop-mask{ position: absolute; left: 0; top: 0; bottom: 0; z-index:1;width: 100%; background: rgba(0,0,0,0.5);}
+.ui-pop-layout .ui-pop-action{ padding-top: 15px; text-align: center; }
+.ui-pop-layout .ui-pop-action .ui-pop-btn{ display: inline-block; margin: 0 5px; padding: 5px 15px; color: #fff; background-color: #f60; }
+
+/** 图片组件 **/
+.ui-image-layout .ui-image-box{ position: relative; background:url() no-repeat; background-size: 100%; }
+.ui-image-layout .ui-image-box .ui-image-edit{ position: absolute; left: 0; top: 0; z-index: 3; overflow: hidden; }
+.ui-image-layout .ui-image-action{ position:fixed; left: 0; bottom: 0; width: 100%; border-top: 1px solid #eee; background-color: #eee; }
+.ui-image-layout .ui-image-action .ui-image-btn{ float: left; position: relative; width: 33.333%; line-height: 44px; text-align: center; }
+.ui-image-layout .input-file{ position:absolute; left:0; top:0; bottom:0; width:100%; opacity:0;}
+.ui-image-layout .ui-decals{ position:absolute; z-index:8; width:100px; height:100px;}
+.ui-image-layout .ui-decals-icon{ position:absolute; width:100%; height:100%; background:url() no-repeat; background-size:cover;}
+.textEdit-pop .ui-pop-center{ padding: 20px; background-color: #fff; }
+.textEdit-pop .ui-form-control .ui-form-label{ display: block; margin: 10px 0 5px 0; }
+#textCancas{height:30px; }
+</style>
+</head>
+
+<body>
+
+
+	<!-- 图片合成 -->
+	<div class="ui-image-layout js_imageComponent" id="picEditMain">
+		
+		<!-- 瓶子小框 -->
+		<div class="ui-image-box js_imageBox" id="preview-pic">
+			<div class="ui-image-edit js_imageEdit">
+				<div id="decals-container"></div>
+			</div>
+		</div>
+		<!-- 瓶子小框 end-->
+
+		<!-- 底部操作条 -->
+		<div class="ui-image-action">
+			<a class="ui-image-btn">上传图片<input class="input-file js_fileImage" type="file" accept="image/*" onchange="selectFileImage(this);" /></a>
+			<a class="ui-image-btn" onclick="pop_switchover('textEdit-pop')">添加文本</a>
+			<a class="ui-image-btn js_imageUploadBtn">确定上传</a>
+		</div>
+		<!-- 底部操作条 end-->
+
+		<!-- 文本添加弹窗 -->
+		<div class="textEdit-pop ui-pop-layout">
+			<div class="ui-pop-center">
+				<div class="ui-form-control">
+					<label class="ui-form-label">单行文本</label>
+					<input class="ui-form-input js_imageText" type="text" placeholder="请输入1-9个字" maxlength="9" />
+				</div>
+				<div class="ui-form-control">
+					<label class="ui-form-label">文本颜色</label>
+					<input class="ui-form-input js_textColor" type="text" placeholder="#000" />
+				</div>
+				<div class="ui-pop-action">
+					<a class="ui-pop-btn" onclick="pop_switchover('textEdit-pop')">取消</a>
+					<a class="ui-pop-btn js_textAddBtn">确认</a>
+				</div>
+			</div>
+			<div class="ui-pop-mask" onclick="pop_switchover('textEdit-pop')"></div>
+		</div>
+		<!-- 文本添加弹窗 end-->
+
+		<!-- 合成结果弹窗 -->
+		<div class="imageResult-pop ui-pop-layout" onclick="pop_switchover('imageResult-pop')">
+			<div class="ui-pop-center">
+				<img class="js_imagePic" width="280" />
+			</div>
+			<div class="ui-pop-mask"></div>
+		</div>
+		<!-- 合成结果弹窗 end-->
+
+	</div>
+	<!-- 图片合成 end-->
+
+
+
+<script>
+	//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+	document.addEventListener('touchmove',function(e){e.preventDefault()},{ passive: false })
+</script>  
+
+<script src="Scripts/jsdom.js"></script>
+<script src="Scripts/html2canvas.min.js"></script>    	
+<script src="Scripts/exif.js"></script>
+<script src="Scripts/image.clip.js"></script>        
+<script src="Scripts/touch.js"></script>
+<script>
+
+	var currIndex = -1;
+
+	var Jiu={
+
+		//图片位置
+		dom:function(){
+			var imgurl="images/pic.png";   //瓶子大背景图
+			var imgX=225,imgY=506,imgW=290,imgH=370;  //瓶子小框坐标和宽高
+
+			var js_imageBox=Dan(".js_imageBox")[0];
+			var js_imageEdit=Dan(".js_imageEdit")[0];
+			var boxW=Dan(".js_imageComponent")[0].offsetWidth; //网页宽度（用于大背景图缩放）
+			var image=new Image();
+			image.src=imgurl;
+			image.onload=function(){
+				var ratio=boxW/image.width;   //缩放比率
+				js_imageBox.style.height=ratio*image.height+'px';
+				js_imageBox.style.backgroundImage = "url("+imgurl+")";
+				js_imageEdit.style.width=ratio*imgW + 'px';
+				js_imageEdit.style.height=ratio*imgH + 'px';
+				js_imageEdit.style.left=ratio*imgX + 'px';
+				js_imageEdit.style.top=ratio*imgY + 'px';
+				Dan(".js_imagePic")[0].src=imgurl;
+			}
+		},
+
+		//图片拖动
+		imageDrag: function (imgurl,w,h,z) {
+
+			var i=Dan(".ui-decals").length;
+            currIndex=i;
+            var decalsContainer = document.getElementById("decals-container");
+
+            //图片元素1
+            var div = document.createElement("div");
+            div.setAttribute("id", "decals" + i);
+            div.className = 'ui-decals';
+            div.style.width=w+'px' || '100px';
+            div.style.height=h+'px' || '100px';
+            div.style.zIndex=z || 8;
+            decalsContainer.appendChild(div);
+
+            //图片元素2
+            var icon = document.createElement("div");
+            icon.className = 'ui-decals-icon';
+            icon.dataset.decals = i;
+            icon.style.backgroundImage = "url("+imgurl+")";
+            div.appendChild(icon);
+
+            var dx, dy;
+            var scale = 1;
+            var tempScale = 1;
+            var angle = 0;
+            var tempAngle = 0;
+            var mainDom = document.getElementById("picEditMain");
+            touch.on('#decals' + i, 'drag', function (ev) {
+                dx = dx || 0;
+                dy = dy || 0;
+                var offx = dx + ev.x;
+                var offy = dy + ev.y;
+                updateTransform(offx, offy, scale, angle);
+			});
+			//拖拽移动每张图片
+            touch.on('#decals' + i, 'dragend', function (ev) {
+				console.log('decals', i)
+
+                dx += ev.x;
+                dy += ev.y;
+                this.dataset.xy = dx + ',' + dy;
+			});
+			//图片旋转
+            touch.on('#picEditMain', 'rotate', function (e) {
+                if(currIndex!=i)return;
+                tempAngle = angle + e.rotation;
+                icon.style.webkitTransform = icon.style.transform =
+                    "rotate(" + tempAngle + "deg) "
+            })
+            touch.on('#picEditMain', 'pinch', function (e) {
+                if(currIndex!=i)return;
+                tempScale = scale * e.scale;
+                updateTransform(dx, dy, tempScale, angle);
+            })
+
+            mainDom.ontouchend = function () {
+                if(currIndex!=i)return;
+                setTimeout(function () {
+                    angle = tempAngle;
+                    scale = tempScale;
+                }, 100)
+            }
+
+            function updateTransform(x, y, scale, angle) {
+                div.style.webkitTransform = div.style.transform =
+                    "translate3d(" + x + "px," + y + "px,0px) " +
+                    "scale3d(" + scale + "," + scale + ",1)";
+            }
+        },
+
+        //文本添加
+        textCanvas:function(_this){
+        	var js_imageText=Dan(".js_imageText")[0];
+        	var js_textColor=Dan(".js_textColor")[0];
+        	var js_imageEdit=Dan(".js_imageEdit")[0];
+        	if(js_imageText.value.length==0){
+        		alertDialog("文本不能为空");
+        		return false;
+        	}
+        	var canvas=document.createElement("canvas");
+        	canvas.width=js_imageEdit.offsetWidth;
+			canvas.height=30;	
+        	var ctx=canvas.getContext("2d");
+        	ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.fillStyle=js_textColor.value.length!=0 ? js_textColor.value : "#000";
+			ctx.font="bolder 14px Microsoft YaHei ";
+			ctx.textAlign="center";
+			ctx.fillText(js_imageText.value,js_imageEdit.offsetWidth/2,20);	
+        	var base64=canvas.toDataURL("image/png");
+        	_this.imageDrag(base64,js_imageEdit.offsetWidth,30);
+        	pop_switchover('textEdit-pop');
+        	js_imageText.value="";
+        	js_textColor.value="";
+        },
+
+        //图片上传
+        imageUpload:function(_this){
+        	alert("点击了上传");
+        	html2canvas(document.getElementById("preview-pic")).then(function (canvas) {
+	        	var ctx=canvas.getContext("2d");
+				ctx.drawImage(Dan(".js_imagePic")[0],0,0,canvas.width/2,canvas.height/2);
+				var base64=canvas.toDataURL("image/jpeg");
+				Dan(".js_imagePic")[0].src=base64;
+            	pop_switchover('imageResult-pop');
+            });
+        },
+
+        //事件绑定怕你
+        eventControl:function(_this){
+        	var js_textAddBtn=Dan(".js_textAddBtn")[0];
+        	js_textAddBtn.onclick=function(){
+        		_this.textCanvas(_this);
+        	}
+
+        	var js_imageUploadBtn=Dan(".js_imageUploadBtn")[0];
+        	js_imageUploadBtn.onclick=function(){
+        		_this.imageUpload(_this);
+        	}
+        },
+
+		//初始化
+		init:function(){
+			var _this=this;
+			_this.dom();
+			_this.eventControl(_this);
+		}
+
+	}
+	Jiu.init();
+
+</script>      
+</body>
+</html>
