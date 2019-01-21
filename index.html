@@ -199,6 +199,7 @@ html,body{ background-color: #fff; overflow:hidden; }
             }
 
             function updateTransform(x, y, scale, angle) {
+		    alert(div)
                 div.style.webkitTransform = div.style.transform =
                     "translate3d(" + x + "px," + y + "px,0px) " +
                     "scale3d(" + scale + "," + scale + ",1)";
