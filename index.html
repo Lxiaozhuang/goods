@@ -188,10 +188,10 @@ html,body{ background-color: #fff; overflow:hidden; }
 				console.log(e)
                 if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
-				$("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
-				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
-                // icon.style.webkitTransform = icon.style.transform =
-                //     "rotate(" + tempAngle + "deg) "
+// 				$("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
+// 				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
+                icon.style.webkitTransform = icon.style.transform =
+                    "rotate(" + tempAngle + "deg) "
             })
             touch.on('#picEditMain', 'pinch', function (e) {
                 if(currIndex!=i)return;
@@ -212,7 +212,7 @@ html,body{ background-color: #fff; overflow:hidden; }
 //                     "scale3d(" + scale + "," + scale + ",1)")
 // 					$(e).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
 //                     "scale3d(" + scale + "," + scale + ",1)")
-               e.style.webkitTransform = e.style.transform =
+               div.style.webkitTransform = e.style.transform =
                     "translate3d(" + x + "px," + y + "px,0px) " +
                     "scale3d(" + scale + "," + scale + ",1)";
             }
