@@ -98,7 +98,7 @@ html,body{ background-color: #fff; overflow:hidden; }
 	//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 	document.addEventListener('touchmove',function(e){e.preventDefault()},{ passive: false })
 </script>  
-
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 <script src="Scripts/jsdom.js"></script>
 <script src="Scripts/html2canvas.min.js"></script>    	
 <script src="Scripts/exif.js"></script>
@@ -180,8 +180,11 @@ html,body{ background-color: #fff; overflow:hidden; }
             touch.on('#picEditMain', 'rotate', function (e) {
                 if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
-                icon.style.webkitTransform = icon.style.transform =
-                    "rotate(" + tempAngle + "deg) "
+		    
+               $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
+				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
+                // icon.style.webkitTransform = icon.style.transform =
+                //     "rotate(" + tempAngle + "deg) "
             })
             touch.on('#picEditMain', 'pinch', function (e) {
                 if(currIndex!=i)return;
