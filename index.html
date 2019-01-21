@@ -185,8 +185,8 @@ html,body{ background-color: #fff; overflow:hidden; }
 		if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
 		    
-               $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
-				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
+               $(e.target).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
+				$(e.target).css('transform',"rotate(" + tempAngle + "deg) ")
 //                 e.target.style.webkitTransform = e.target.style.transform =
 //                     "rotate(" + tempAngle + "deg) "
             })
@@ -205,13 +205,13 @@ html,body{ background-color: #fff; overflow:hidden; }
             }
 
             function updateTransform(x, y, scale, angle,e) {
-// 		$("#decals"+i).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
-//                     "scale3d(" + scale + "," + scale + ",1)")
-// 					$("#decals"+i).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
-//                     "scale3d(" + scale + "," + scale + ",1)")
-                e.target.style.webkitTransform = e.target.style.transform =
-                    "translate3d(" + x + "px," + y + "px,0px) " +
-                    "scale3d(" + scale + "," + scale + ",1)";
+		$(e.target).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
+                    "scale3d(" + scale + "," + scale + ",1)")
+					$(e.target).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
+                    "scale3d(" + scale + "," + scale + ",1)")
+//                 e.target.style.webkitTransform = e.target.style.transform =
+//                     "translate3d(" + x + "px," + y + "px,0px) " +
+//                     "scale3d(" + scale + "," + scale + ",1)";
                 
             }
         },
