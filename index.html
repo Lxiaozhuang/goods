@@ -185,15 +185,15 @@ html,body{ background-color: #fff; overflow:hidden; }
 		if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
 		    
-               $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
-				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
-                // icon.style.webkitTransform = icon.style.transform =
-                //     "rotate(" + tempAngle + "deg) "
+//                $("#decals"+i).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
+// 				$("#decals"+i).css('transform',"rotate(" + tempAngle + "deg) ")
+                e.target.style.webkitTransform = e.target.style.transform =
+                    "rotate(" + tempAngle + "deg) "
             })
             touch.on('#picEditMain', 'pinch', function (e) {
                 if(currIndex!=i)return;
                 tempScale = scale * e.scale;
-                updateTransform(dx, dy, tempScale, angle);
+                updateTransform(dx, dy, tempScale, angle,e);
             })
 
             mainDom.ontouchend = function () {
@@ -204,14 +204,14 @@ html,body{ background-color: #fff; overflow:hidden; }
                 }, 100)
             }
 
-            function updateTransform(x, y, scale, angle) {
-		$("#decals"+i).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
-                    "scale3d(" + scale + "," + scale + ",1)")
-					$("#decals"+i).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
-                    "scale3d(" + scale + "," + scale + ",1)")
-                // div.style.webkitTransform = div.style.transform =
-                //     "translate3d(" + x + "px," + y + "px,0px) " +
-                //     "scale3d(" + scale + "," + scale + ",1)";
+            function updateTransform(x, y, scale, angle,e) {
+// 		$("#decals"+i).css('webkitTransform',"translate3d(" + x + "px," + y + "px,0px) " +
+//                     "scale3d(" + scale + "," + scale + ",1)")
+// 					$("#decals"+i).css('transform',"translate3d(" + x + "px," + y + "px,0px) " +
+//                     "scale3d(" + scale + "," + scale + ",1)")
+                e.target.style.webkitTransform = e.target.style.transform =
+                    "translate3d(" + x + "px," + y + "px,0px) " +
+                    "scale3d(" + scale + "," + scale + ",1)";
                 
             }
         },
