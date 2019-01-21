@@ -174,7 +174,7 @@ html,body{ background-color: #fff; overflow:hidden; }
 			})
 			//拖拽移动每张图片
             touch.on('#decals' + i, 'dragend', function (ev) {
-				console.log('decals', i)
+				
 
                 dx += ev.x;
                 dy += ev.y;
@@ -184,7 +184,8 @@ html,body{ background-color: #fff; overflow:hidden; }
             touch.on('#picEditMain', 'rotate', function (e) {
 		if(currIndex!=i)return;
                 tempAngle = angle + e.rotation;
-		    
+		    console.log(e)
+		    console.log($(e.target))
                $(e.target).css('webkitTransform',"rotate(" + tempAngle + "deg) ")
 				$(e.target).css('transform',"rotate(" + tempAngle + "deg) ")
 //                 e.target.style.webkitTransform = e.target.style.transform =
